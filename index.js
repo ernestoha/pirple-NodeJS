@@ -4,11 +4,13 @@
 
 // Dependencies
 var http = require('http');
+var https = require('https');
 var url = require('url');
 var StringDecoder = require('string_decoder').StringDecoder;
 var fs = require('fs');
 var helpers = require('./lib/helpers');
-var httpPort = 3000;
+var handlers = require('./lib/handlers');
+var config = require('./lib/config');
 
  // Instantiate the HTTP server
 var httpServer = http.createServer(function(req,res){
@@ -16,11 +18,25 @@ var httpServer = http.createServer(function(req,res){
 });
 
 // Start the HTTP server
-httpServer.listen(httpPort,function(){
-  console.log('The HTTP server is running on port '+httpPort);
+httpServer.listen(config.httpPort,function(){
+  console.log('The HTTP server is running on port '+config.httpPort);
 });
 
-// All the server logic for http (and https server TODO) requests
+// Instantiate the HTTPS server
+var httpsServerOptions = {
+  'key': fs.readFileSync('./https/key.pem'),
+  'cert': fs.readFileSync('./https/cert.pem')
+};
+var httpsServer = https.createServer(httpsServerOptions,function(req,res){
+  unifiedServer(req,res);
+});
+
+// Start the HTTPS server
+httpsServer.listen(config.httpsPort,function(){
+ console.log('The HTTPS server is running on port '+config.httpsPort);
+});
+
+// All the server logic for http (and https server @TODO) requests
 var unifiedServer = function(req,res){
 
   // Parse the url
@@ -50,6 +66,8 @@ var unifiedServer = function(req,res){
 
       // Check the router for a matching path for a handler. If one is not found, use the notFound handler instead.
       var chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
+
+      console.log(buffer);
 
       // Construct the data object to send to the handler
       var data = {
@@ -82,35 +100,9 @@ var unifiedServer = function(req,res){
   });
 };
 
-// Define all the handlers
-var handlers = {};
-
-// Ping handler
-handlers.ping = function(data,callback){
-    callback(200);
-};
-
-// Not-Found handler
-handlers.notFound = function(data,callback){
-  callback(404);
-};
-
-// Hello [World] handler
-handlers.hello = function(data,callback){
-    var acceptableMethods = ['post','get'];
-    if(acceptableMethods.indexOf(data.method) > -1){
-        var dataPath = (data.method=='post') ? "payload" : "queryStringObject";
-        var name = typeof(data[dataPath].name) == 'string' && data[dataPath].name.trim().length > 0 ? data[dataPath].name.trim() : false;
-        var data = {"greetings" : ("Hello World " + ((name) ? name : '')).trim() + '.'};
-        console.log(data);
-        callback(200, data);  
-    } else {
-      callback(405);
-    }
-  };
-
 // Define the request router
 var router = {
   'ping' : handlers.ping,
-  'hello' : handlers.hello
+  'hello' : handlers.hello,
+  'users' : handlers.users
 };
