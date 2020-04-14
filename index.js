@@ -12,7 +12,7 @@ var helpers = require('./lib/helpers');
 var handlers = require('./lib/handlers');
 var config = require('./lib/config');
 
- // Instantiate the HTTP server
+// Instantiate the HTTP server
 var httpServer = http.createServer(function(req,res){
   unifiedServer(req,res);
 });
@@ -36,7 +36,7 @@ httpsServer.listen(config.httpsPort,function(){
  console.log('The HTTPS server is running on port '+config.httpsPort);
 });
 
-// All the server logic for http (and https server @TODO) requests
+// All the server logic for http and https server requests
 var unifiedServer = function(req,res){
 
   // Parse the url
@@ -67,9 +67,9 @@ var unifiedServer = function(req,res){
       // Check the router for a matching path for a handler. If one is not found, use the notFound handler instead.
       var chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
 
-      console.log(buffer);
+      // console.log(buffer);
 
-      // Construct the data object to send to the handler
+      // Construct the data object to send the handler
       var data = {
         'trimmedPath' : trimmedPath,
         'queryStringObject' : queryStringObject,
@@ -78,6 +78,8 @@ var unifiedServer = function(req,res){
         'payload' : helpers.parseJsonToObject(buffer)
       };
 
+      // console.log(data);
+      
       // Route the request to the handler specified in the router
       chosenHandler(data,function(statusCode,payload){
 
@@ -105,5 +107,7 @@ var router = {
   'ping' : handlers.ping,
   'hello' : handlers.hello,
   'users' : handlers.users,
-  'tokens' : handlers.tokens
+  'tokens' : handlers.tokens,
+  'menu' : handlers.menu,
+  'cart' : handlers.cart
 };

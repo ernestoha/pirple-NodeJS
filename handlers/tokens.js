@@ -6,6 +6,7 @@
 var _data = require('./../lib/data');
 var helpers = require('./../lib/helpers');
 var config = require('./../lib/config');
+var jsonDir = 'tokens';
 
 //Define handlers
 var handlers = {};
@@ -46,7 +47,7 @@ handlers._tokens.post = function (data, callback) {
                     };
 
                     // Store the token
-                    _data.create('tokens', tokenId, tokenObject, function (err) {
+                    _data.create(jsonDir, tokenId, tokenObject, function (err) {
                         if (!err) {
                             callback(200, tokenObject);
                         } else {
@@ -73,7 +74,7 @@ handlers._tokens.get = function (data, callback) {
     var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
     if (id) {
         // Lookup the token
-        _data.read('tokens', id, function (err, tokenData) {
+        _data.read(jsonDir, id, function (err, tokenData) {
             if (!err && tokenData) {
                 callback(200, tokenData);
             } else {
@@ -93,14 +94,14 @@ handlers._tokens.put = function (data, callback) {
     var extend = typeof (data.payload.extend) == 'boolean' && data.payload.extend == true ? true : false;
     if (id && extend) {
         // Lookup the existing token
-        _data.read('tokens', id, function (err, tokenData) {
+        _data.read(jsonDir, id, function (err, tokenData) {
             if (!err && tokenData) {
                 // Check to make sure the token isn't already expired
                 if (tokenData.expires > Date.now()) {
                     // Set the expiration an hour from now
                     tokenData.expires = Date.now() + config.tokenTimeOut // 1000 * 60 * 60 = 1hour;
                     // Store the new updates
-                    _data.update('tokens', id, tokenData, function (err) {
+                    _data.update(jsonDir, id, tokenData, function (err) {
                         if (!err) {
                             callback(200);
                         } else {
@@ -128,10 +129,10 @@ handlers._tokens.delete = function (data, callback) {
     var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
     if (id) {
         // Lookup the token
-        _data.read('tokens', id, function (err, tokenData) {
+        _data.read(jsonDir, id, function (err, tokenData) {
             if (!err && tokenData) {
                 // Delete the token
-                _data.delete('tokens', id, function (err) {
+                _data.delete(jsonDir, id, function (err) {
                     if (!err) {
                         callback(200);
                     } else {
@@ -150,8 +151,11 @@ handlers._tokens.delete = function (data, callback) {
 // Verify if a given token id is currently valid for a given user
 handlers._tokens.verifyToken = function (id, phone, callback) {
     // Lookup the token
-    _data.read('tokens', id, function (err, tokenData) {
+    // console.log('Verifying 001');
+    _data.read(jsonDir, id, function (err, tokenData) {
+        // console.log('Verifying 002', tokenData, 'phone', phone);
         if (!err && tokenData) {
+            // console.log('Verifying 003', tokenData.phone == phone);
             // Check that the token is for the given user and has not expired
             if (tokenData.phone == phone && tokenData.expires > Date.now()) {
                 callback(true);
@@ -165,4 +169,5 @@ handlers._tokens.verifyToken = function (id, phone, callback) {
 };
 
 // Export the tokens-handlers
-module.exports = handlers.tokens;
+module.exports.tokens = handlers.tokens;
+module.exports._tokens = handlers._tokens;
