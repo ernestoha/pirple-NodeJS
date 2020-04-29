@@ -3,6 +3,7 @@
  */
 
 // Dependencies
+var log = require('./../lib/logs');
 var _data = require('./../lib/data');
 var helpers = require('./../lib/helpers');
 var _handlers = require('./tokens.js'); // Tokens Handler
@@ -17,12 +18,16 @@ handlers.cart = function (data, callback) {
     if (acceptableMethods.indexOf(data.method) > -1) {
         handlers._cart[data.method](data, callback);
     } else {
+        log.add4Server001({route: jsonDir.toUpperCase()+'['+data.method.toUpperCase()+']', Method : 'Not allowed.'}, function (err) {
+            if (err)
+                console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"-Invalid Method"+err);
+        });
         callback(405);
     }
 };
 
-// Container for all the shopping cart methods
-handlers._cart = {};
+handlers._cart = {}; // Container for all the shopping cart private [post, get, put, delete] methods
+handlers.public = {}; // Container for all the cart public methods
 
 /**  
  * Shopping Cart - post
@@ -44,14 +49,12 @@ handlers._cart.post = function (data, callback) {
         var token = typeof (data.headers.token) == 'string' ? data.headers.token : false;
 
         // Lookup the user phone by reading the token
-        _data.read('tokens', token, function (err, tokenData) {
+        _handlers._tokens.getTokenById(token, function (err, tokenData){
             if (!err && tokenData) {
-                var userPhone = tokenData.phone;
-                console.log({ "userPhone": userPhone });
+                console.log({ "tokenData.phone": tokenData.phone });
                 // console.log("ehh->",data.payload);
-
                 // Lookup the user data
-                _data.read('users', userPhone, function (err, userData) {
+                _data.read('users', tokenData.phone, function (err, userData) {
                     if (!err && userData) {
                         // Lookup the menu data
                         _data.read('menu', menuId, function (err, menuData) {
@@ -60,10 +63,10 @@ handlers._cart.post = function (data, callback) {
                                 var userCart = typeof (userData.cart) == 'object' && userData.cart instanceof Array ? userData.cart : [];
                                 var cartId = helpers.createRandomString(20);
 
-                                // Create the user object
+                                // Create the cart object
                                 var cartObject = {
                                     'id': cartId,
-                                    'userPhone': userPhone,
+                                    'userPhone': tokenData.phone,
                                     'menuId': menuId,
                                     'name': menuData.name,
                                     'price': menuData.price,
@@ -78,7 +81,7 @@ handlers._cart.post = function (data, callback) {
                                         userData.cart.push(cartId);
 
                                         // Save the new user data
-                                        _data.update('users', userPhone, userData, function (err) {
+                                        _data.update('users', tokenData.phone, userData, function (err) {
                                             if (!err) {
                                                 // Return the data about the new item
                                                 callback(200, cartObject);
@@ -123,13 +126,17 @@ handlers._cart.get = function (data, callback) {
                 // Get the token that sent the request
                 var token = typeof (data.headers.token) == 'string' ? data.headers.token : false;
                 // Verify that the given token is valid and belongs to the user who created the cart's item
-                console.log("This is cart data", cartData);
+                console.log("This is cart data.", cartData);
                 _handlers._tokens.verifyToken(token, cartData.userPhone, function (tokenIsValid) {
                     if (tokenIsValid) {
                         // Return Cart Data
                         callback(200, cartData);
                     } else {
-                        callback(403);
+                        log.add4Server001({route: jsonDir.toUpperCase()+'[GET]', InvalidToken : token}, function (err) {
+                            if (err)
+                                console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"[GET]-Invalid Token"+err);
+                        });
+                        callback(403, "InvalidToken token.");
                     }
                 });
             } else {
@@ -276,5 +283,16 @@ handlers._cart.delete = function (data, callback) {
     }
 };
 
+handlers.public.getCartItems = function (items, callback) {
+    if (items.length > 0){
+        _data.readAll(jsonDir, function (err, data) { //Unordered List
+            callback(err, data);
+        }, items);
+    } else {
+        callback("Shopping Cart Empty", false);
+    }
+};
+
 // Export the cart-handlers
-module.exports = handlers.cart;
+module.exports.cart = handlers.cart;
+module.exports._cart = handlers.public;

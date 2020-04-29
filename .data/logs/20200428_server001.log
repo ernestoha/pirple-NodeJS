@@ -1,0 +1,4 @@
+195024: {"TEST01":"test"}
+195454: {"route":"CART[GET]","InvalidToken":"tuxucjs42ve5rwyafqx1"}
+202025: {"route":"CART[PATCH]","Method":"Not allowed."}
+222535: {"route":"ORDERS[POST]","error":{"error":{"code":"amount_too_small","doc_url":"https://stripe.com/docs/error-codes/amount-too-small","message":"Amount must be at least $0.50 usd","param":"amount","type":"invalid_request_error"}}}

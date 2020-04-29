@@ -3,6 +3,7 @@
  */
 
 // Dependencies
+var log = require('./../lib/logs');
 var _data = require('./../lib/data');
 var helpers = require('./../lib/helpers');
 var config = require('./../lib/config');
@@ -17,12 +18,16 @@ handlers.tokens = function (data, callback) {
     if (acceptableMethods.indexOf(data.method) > -1) {
         handlers._tokens[data.method](data, callback);
     } else {
+        log.add4Server001({route: jsonDir.toUpperCase()+'['+data.method.toUpperCase()+']', Method : 'Not allowed.'}, function (err) {
+            if (err)
+                console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"-Invalid Method"+err);
+        });
         callback(405);
     }
 };
 
-// Container for all the tokens methods
-handlers._tokens = {};
+handlers._tokens = {}; // Container for all the tokens private methods
+handlers.public = {}; // Container for all the tokens public methods
 
 // Tokens - post
 // Required data: phone, password
@@ -120,7 +125,6 @@ handlers._tokens.put = function (data, callback) {
     }
 };
 
-
 // Tokens - delete
 // Required data: id
 // Optional data: none
@@ -148,8 +152,9 @@ handlers._tokens.delete = function (data, callback) {
     }
 };
 
+
 // Verify if a given token id is currently valid for a given user
-handlers._tokens.verifyToken = function (id, phone, callback) {
+handlers.public.verifyToken = function (id, phone, callback) {
     // Lookup the token
     // console.log('Verifying 001');
     _data.read(jsonDir, id, function (err, tokenData) {
@@ -168,6 +173,12 @@ handlers._tokens.verifyToken = function (id, phone, callback) {
     });
 };
 
+handlers.public.getTokenById = function (id, callback) {
+    _data.read(jsonDir, id, function (err, tokenData) {
+        callback(err, tokenData);
+    });
+};
+
 // Export the tokens-handlers
 module.exports.tokens = handlers.tokens;
-module.exports._tokens = handlers._tokens;
+module.exports._tokens = handlers.public;

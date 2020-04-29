@@ -109,5 +109,6 @@ var router = {
   'users' : handlers.users,
   'tokens' : handlers.tokens,
   'menu' : handlers.menu,
-  'cart' : handlers.cart
+  'cart' : handlers.cart,
+  'orders' : handlers.orders
 };

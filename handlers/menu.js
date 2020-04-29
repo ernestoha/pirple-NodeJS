@@ -29,35 +29,33 @@ handlers._menu.get = function (data, callback) {
     // Id
     // console.log('menu-get');
     // var id = typeof (data.queryStringObject.id) == 'number' ? data.queryStringObject.id : "all"; //@TODO instead "all" then false and read *.json to return json array...
-    var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length > 0 ? data.queryStringObject.id.trim() : "all";//"all" //false
+    var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length > 0 ? data.queryStringObject.id.trim() : false;//"all" //false
 
     // Check that phone number is valid
-    var phone = typeof (data.queryStringObject.phone) == 'string' && data.queryStringObject.phone.trim().length == 10 ? data.queryStringObject.phone.trim() : false;
+    // var phone = typeof (data.queryStringObject.phone) == 'string' && data.queryStringObject.phone.trim().length == 10 ? data.queryStringObject.phone.trim() : false;
 
-    // console.log({"id":id, "phone":phone});
-    if (phone) {
+    // Get token from headers
+    var token = typeof (data.headers.token) == 'string' ? data.headers.token : false;
 
-        // Get token from headers
-        var token = typeof (data.headers.token) == 'string' ? data.headers.token : false;
-        // Verify that the given token is valid for the phone number
-        _handlers._tokens.verifyToken(token, phone, function (tokenIsValid) {
-            if (tokenIsValid) {
-                // Lookup the menu
-                _data.read(table, id, function (err, data) {
-                    // console.log({"menu": "menu", "err":err, "data": data});
-                    if (!err && data) {
-                        callback(200, data);
-                    } else {
-                        callback(404);
-                    }
-                });
-            } else {
-                callback(403, { "Error": "Missing required token in header, or token is invalid." })
-            }
-        });
-    } else {
-        callback(400, { 'Error': 'Missing required field.' })
-    }
+    // Lookup the user phone by reading the token
+    _handlers._tokens.getTokenById(token, function (err, tokenData) {
+        if (!err && tokenData) {
+            var userPhone = tokenData.phone;
+            console.log({ "userPhone": userPhone });
+            // Lookup the menu
+            _data.read(table, id, function (err, data) {
+                // console.log({"menu": "menu", "err":err, "data": data});
+                // if (!err && data) {
+                if (data) { //return data, register log
+                    callback(200, data);
+                } else {
+                    callback(404);
+                }
+            });
+        } else {
+            callback(403, { "Error": "Missing required token in header, or token is invalid." })
+        }
+    });
 };
 
 // Export the menu-handlers

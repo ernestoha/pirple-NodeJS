@@ -3,6 +3,7 @@
  */
 
 // Dependencies
+var log = require('./../lib/logs');
 var _data = require('./../lib/data');
 var helpers = require('./../lib/helpers');
 var _handlers = require('./tokens.js'); // Tokens Handler
@@ -18,6 +19,10 @@ handlers.users = function (data, callback) {
     if (acceptableMethods.indexOf(data.method) > -1) {
         handlers._users[data.method](data, callback);
     } else {
+        log.add4Server001({route: jsonDir.toUpperCase()+'['+data.method.toUpperCase()+']', Method : 'Not allowed.'}, function (err) {
+            if (err)
+                console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"-Invalid Method"+err);
+        });
         callback(405);
     }
 };
@@ -197,7 +202,7 @@ handlers._users.delete = function (data, callback) {
                 _data.read(jsonDir, phone, function (err, userData) {
                     if (!err && data) {
                         // Delete the user's data
-                        _data.delete('users', phone, function (err) {
+                        _data.delete(jsonDir, phone, function (err) {
                             if (!err) {
                                 // Delete each of the itmes associated with the user inside the Shoping Cart
                                 var userCart = typeof (userData.cart) == 'object' && userData.cart instanceof Array ? userData.cart : [];
