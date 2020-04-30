@@ -83,7 +83,7 @@ handlers._orders.post = function (data, callback) {
                                 paymentDetails.amount = total * 100;
                                 // data['payment'] = paymentDetails;
                                 
-                                _handlers.payments.charge4Test(orderId, paymentDetails, function(response){
+                                _handlers.payments.charge(orderId, paymentDetails, function(response){
                                     var err = (response["id"] !== undefined) ? false : response;
                                     if(err){
                                         console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"-PAYMENT ERROR. "+err);

@@ -32,7 +32,27 @@ var paymentDetails = {
 };
 
 //handlers.payments.charge('8192', paymentDetails, function(err){console.log({"err->" : err});});
-// handlers.emails.send('ernestoharias@gmail.com','Test','Email', function(err){console.log({"err->" : err});});
+// handlers.emails.send('8192', 'ernestoharias@gmail.com','Test','Email', function(err){console.log({"err->" : err});});
+// handlers.emails.pending.getAll(unction(err, orderId   {
+      // handlers.emails.pending.sendOrderCreatedAndMv("bzku0p4bcfldu4s1ksb8.json", function(err){console.log({"err->" : err});});
+// });
+
+handlers.emails.pending.getAll(function(err, emailsPending){
+      emailsPending.forEach(function(orderIdFile) {
+            console.log(orderIdFile);
+            handlers.emails.pending.sendOrderCreatedAndMv("b1zku0p4bcfldu4s1ksb8.json", function(err){
+                  if(err){
+                        // console.log('\x1b[31m%s\x1b[0m', {"err->" : JSON.stringify(err)});
+                        console.log({"err->" : JSON.stringify(err)});
+                  }
+            });
+      });
+      
+      // handlers.emails.pending.sendOrderCreatedAndMv("bzku0p4bcfldu4s1ksb8", function(err){console.log({"err->" : err});});
+      // console.log(err);
+      // console.log(data);
+});
+return false;
 
 // var path = require('path');
 // Filesystem = require('fs');
@@ -52,7 +72,7 @@ var paymentDetails = {
 var files = ["hgarkdqg9b7q0ze8t7ka", "s3sxj6lmynzayq90okpw"];
 var dir = "cart";
 // _data.readDirByArraySync(files, dir, function (err, data) {
-_data.readAllSync(dir, function (err, data) {
+_data.readAll(dir, function (err, data) {
       console.log({"err": err, "data" : data.cart});
       console.log('eee111');
 }, files);
