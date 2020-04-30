@@ -10,6 +10,7 @@ const jsonDir = 'orders';
 let _handlers = require('./tokens.js'); // Tokens, Cart Handler
 _handlers._cart = require('./cart.js')._cart;
 _handlers.payments = require('./payments');
+_handlers.emails = require('./emails');
 
 // console.log("ee-test-ee",_handlers._tokens.verifyToken);
 //Define handlers
@@ -82,7 +83,7 @@ handlers._orders.post = function (data, callback) {
                                 paymentDetails.amount = total * 100;
                                 // data['payment'] = paymentDetails;
                                 
-                                _handlers.payments.charge(orderId, paymentDetails, function(response){
+                                _handlers.payments.charge4Test(orderId, paymentDetails, function(response){
                                     var err = (response["id"] !== undefined) ? false : response;
                                     if(err){
                                         console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"-PAYMENT ERROR. "+err);
@@ -119,9 +120,17 @@ handlers._orders.post = function (data, callback) {
                                                 // Save the user data
                                                 _data.update('users', tokenData.phone, userData, function (err) {
                                                     if (!err) {
-                                                        // Return the new Order data
-                                                        //callback(200, orderObject);
-                                                        callback(200, data);
+                                                        _handlers.emails.pending.create(orderId, userData.email, userData.fullName, response.receipt_url, function (err) {
+                                                            // Return the new Order data
+                                                            //callback(200, orderObject);
+                                                            if (!err) {
+                                                                log.add4Server001({route: jsonDir.toUpperCase()+'[POST]', err : 'ERROR CREATING PENDING EMAIL FILE.' + err}, function (err) {
+                                                                    if (err)
+                                                                        console.log('\x1b[31m%s\x1b[0m', jsonDir.toUpperCase()+"[POST]-"+err);
+                                                                });                                
+                                                            }
+                                                            callback(200, data);
+                                                        });
                                                     } else {
                                                         callback(500, { 'Error': 'Could not update the user with the new order detail.' });
                                                     }

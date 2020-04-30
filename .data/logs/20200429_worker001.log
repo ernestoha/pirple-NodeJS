@@ -1,0 +1,2 @@
+192246: {"worker":"001","sendEmailErr":{"errno":-2,"code":"ENOENT","syscall":"open","path":"~/.data/emails/pending/bzku0p4bcfldu4s1ksb8.json"}}
+194622: {"worker":"001","sendEmailErr":"Could not mv File. Error: Error: ENOENT: no such file or directory, rename '~/.data/emails/sent/bzku0p4bcfldu4s1ksb8.json'"}

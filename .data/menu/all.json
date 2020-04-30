@@ -1,8 +1,0 @@
-[
-    {"id":"1", "name":"Hawaiian Pizza", "price": 5.55},
-    {"id":"2", "name":"Margherita Pizza", "price": 4.45},
-    {"id":"3", "name":"Pepperoni Pizza", "price": 3.45},
-    {"id":"4", "name":"BBQ Chicken Pizza", "price": 5.05},
-    {"id":"5", "name":"Chicken Alfredo Pizza", "price": 4.99},
-    {"id":"6", "name":"Four Cheese Pizza", "price": 3.99}
-]
