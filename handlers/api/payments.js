@@ -6,9 +6,9 @@
 // Dependencies
 var https = require('https');
 var qs = require('querystring');
-var config = require('./../lib/config');
-var _data = require('./../lib/data');
-var helpers = require('./../lib/helpers');
+var config = require('./../../lib/config');
+var _data = require('./../../lib/data');
+var helpers = require('./../../lib/helpers');
 var jsonDir = 'payments';
 
 // Container for module (to be exported)
@@ -31,6 +31,8 @@ var paymentDetails = {
 handlers.payments.charge('8192', paymentDetails, function(err){console.log({"err->" : err});});
  */
 payments.charge = function (orderId, paymentDetails, callback) {
+    //paymentDetails.capture = false;// [default=true] Charge Creation, Two Steps, second is to Capture the charge
+
     // Validate parameters
     orderId = typeof (orderId) == 'string' && orderId.trim().length > 0 ? orderId.trim() : false;
     paymentDetails = typeof (paymentDetails) == 'object' ? paymentDetails : false;
@@ -115,6 +117,7 @@ payments.charge4Test = function (orderId, paymentDetails, callback) {
     //var value  = '{"error": {"code": "amount_too_small","doc_url": "https://stripe.com/docs/error-codes/amount-too-small","message": "Amount must be at least $0.50 usd","param": "amount","type": "invalid_request_error"}}';
     callback(helpers.parseJsonToObject(value));
 };
+
 
 // Export the module
 module.exports = payments;

@@ -5,9 +5,9 @@
 // Dependencies
 var https = require('https');
 var qs = require('querystring');
-var config = require('./../lib/config');
-var _data = require('./../lib/data');
-var helpers = require('./../lib/helpers');
+var config = require('./../../lib/config');
+var _data = require('./../../lib/data');
+var helpers = require('./../../lib/helpers');
 var jsonDir = 'emails';
 var jsonDirAPI = jsonDir+"/API"; //Api Response
 var jsonDirPend = jsonDir+"/pending"; //Pending to Sent

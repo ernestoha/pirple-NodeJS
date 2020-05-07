@@ -3,9 +3,9 @@
  */
 
 // Dependencies
-var log = require('./../lib/logs');
-const _data = require('./../lib/data');
-const helpers = require('./../lib/helpers');
+var log = require('./../../lib/logs');
+const _data = require('./../../lib/data');
+const helpers = require('./../../lib/helpers');
 const jsonDir = 'orders';
 let _handlers = require('./tokens.js'); // Tokens, Cart Handler
 _handlers._cart = require('./cart.js')._cart;

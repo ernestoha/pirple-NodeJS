@@ -3,10 +3,10 @@
  */
 
 // Dependencies
-var log = require('./../lib/logs');
-var _data = require('./../lib/data');
-var helpers = require('./../lib/helpers');
-var config = require('./../lib/config');
+var log = require('./../../lib/logs');
+var _data = require('./../../lib/data');
+var helpers = require('./../../lib/helpers');
+var config = require('./../../lib/config');
 var jsonDir = 'tokens';
 
 //Define handlers

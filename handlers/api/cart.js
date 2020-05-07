@@ -3,9 +3,9 @@
  */
 
 // Dependencies
-var log = require('./../lib/logs');
-var _data = require('./../lib/data');
-var helpers = require('./../lib/helpers');
+var log = require('./../../lib/logs');
+var _data = require('./../../lib/data');
+var helpers = require('./../../lib/helpers');
 var _handlers = require('./tokens.js'); // Tokens Handler
 var jsonDir = 'cart';
 
@@ -35,6 +35,7 @@ handlers.public = {}; // Container for all the cart public methods
  * Optional data: none
  */
 handlers._cart.post = function (data, callback) {
+    console.log(data);
     // Check that all required fields are filled out
     // var phone = typeof (data.payload.phone) == 'string' && data.payload.phone.trim().length == 10 ? data.payload.phone.trim() : false;
     var menuId = typeof (data.payload.menuId) == 'number' ? data.payload.menuId : false;
@@ -126,7 +127,7 @@ handlers._cart.get = function (data, callback) {
                 // Get the token that sent the request
                 var token = typeof (data.headers.token) == 'string' ? data.headers.token : false;
                 // Verify that the given token is valid and belongs to the user who created the cart's item
-                console.log("This is cart data.", cartData);
+                // console.log("This is cart data.", cartData);
                 _handlers._tokens.verifyToken(token, cartData.userPhone, function (tokenIsValid) {
                     if (tokenIsValid) {
                         // Return Cart Data
@@ -225,8 +226,10 @@ handlers._cart.put = function (data, callback) {
  * Optional data: none
  */
 handlers._cart.delete = function (data, callback) {
+    console.log('eee');
     // Check that id is valid
     var id = typeof (data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length == 20 ? data.queryStringObject.id.trim() : false;
+    console.log({'deleteId':id});
     if (id) {
         // Lookup the cart
         _data.read(jsonDir, id, function (err, cartData) {
@@ -267,15 +270,15 @@ handlers._cart.delete = function (data, callback) {
                                     }
                                 });
                             } else {
-                                callback(500, { "Error": "Could not delete the cart data." })
+                                callback(500, { "Error": "Could not delete the cart item." })
                             }
                         });
                     } else {
-                        callback(403);
+                        callback(403, { "Error": "Could not delete the cart item, because is not in your cart." });
                     }
                 });
             } else {
-                callback(400, { "Error": "The Cart ID specified could not be found." });
+                callback(400, { "Error": "The Item (by Cart ID) specified could not be found." });
             }
         });
     } else {

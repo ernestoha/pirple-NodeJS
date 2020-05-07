@@ -1,0 +1,41 @@
+<h1>Shopping Cart</h1>
+<h2>Check your Items to Order.</h2>
+<hr />
+
+<div id="formOutPut"></div>
+<table id="menuListTable">
+  <tr>
+    <th>Pizza</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>SubTotal</th>
+    <th>Delete Item</th>
+  </tr>
+  <tr id="noCartItemsMessage">
+    <td colspan="5" class="text-center text-red">You have no Items added, please add one!</td>
+  </tr>
+</table>
+
+<div id="addNewItemToCart" class="ctaWrapper">
+  <a class="cta green" href="menu/list">Add a New Item to you Shopping Cart.</a>
+</div>
+
+<div id="createNewOrder" class="ctaWrapper">
+  <!--a class="cta green" href="#">Order.</a-->
+  <!--input class="cta green" type="submit" value="Order" /-->
+  <!--button class="cta green">Order</button-->
+  
+  <div class="formWrapper">
+    <div class="new-order">
+      <form name="new-order-form" class="new-order-form">
+        <div class="inputWrapper">
+          <div class="inputLabel">CREDIT CARD TOKEN:</div>
+          <input type="text" name="sourceType" class="text-center" placeholder="tok_visa">
+        </div>
+        <div class="inputWrapper ctaWrapper">
+          <input class="cta green" type="submit" value="Order" />
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

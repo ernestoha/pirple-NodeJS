@@ -3,7 +3,7 @@
  */
 
 // Dependencies
-var _data = require('./../lib/data');
+var _data = require('./../../lib/data');
 var _handlers = require('./tokens.js'); // Tokens Handler
 var table = 'menu';
 

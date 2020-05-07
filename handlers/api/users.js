@@ -3,9 +3,9 @@
  */
 
 // Dependencies
-var log = require('./../lib/logs');
-var _data = require('./../lib/data');
-var helpers = require('./../lib/helpers');
+var log = require('./../../lib/logs');
+var _data = require('./../../lib/data');
+var helpers = require('./../../lib/helpers');
 var _handlers = require('./tokens.js'); // Tokens Handler
 var jsonDir = 'users';
 
@@ -40,9 +40,9 @@ handlers._users.post = function (data, callback) {
     var fullName = typeof (data.payload.fullName) == 'string' && data.payload.fullName.trim().length > 0 ? data.payload.fullName.trim() : false;
     var address = typeof (data.payload.address) == 'string' && data.payload.address.trim().length > 0 ? data.payload.address.trim() : false;
     var email = typeof (data.payload.email) == 'string' && data.payload.email.trim().length > 0 ? (helpers.validateEmail(data.payload.email.trim()) ? data.payload.email.trim() : false) : false;
-    // var tosAgreement = typeof(data.payload.tosAgreement) == 'boolean' && data.payload.tosAgreement == true ? true : false;
+    var tosAgreement = typeof(data.payload.tosAgreement) == 'boolean' && data.payload.tosAgreement == true ? true : false;
 
-    // console.log("ehh->",data.payload);
+     console.log("ehh->",data.payload);
     if (phone && password && fullName && address && email) {//&& tosAgreement
         // Make sure the user doesnt already exist
         _data.read(jsonDir, phone, function (err, data) {
