@@ -1,4 +1,6 @@
-{
+{"payment": 
+    { "sent":{"currency":"usd","source":"tok_mastercard","description":"Metadada No coincide porsia Ernesto Herrera Pizza","metadata[order_id]":"8192 1586935905028","metadata[Hawaiian Pizza = 1]":5.55,"metadata[Pepperoni Pizza = 1]":3.45,"metadata[BBQ Chicken Pizza = 1]":5.05,"amount":61},
+        "received" : {
     "id": "ch_1GY5imH1iJwlFMdqW069lAOL",
     "object": "charge",
     "amount": 61,
@@ -120,3 +122,4 @@
     "transfer_data": null,
     "transfer_group": null
 }
+    }}

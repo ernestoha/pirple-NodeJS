@@ -13,6 +13,7 @@ var _data = require('./lib/data');//testing
 var log = require('./lib/logs');//testing
 var handlers = require('./lib/handlers');
 var config = require('./lib/config');
+var cliTest= require('./lib/cli');
 
 // log.add4Server001( {e123: "dir12"}, function (err) {
 //   console.log(err);
@@ -37,21 +38,47 @@ var paymentDetails = {
       // handlers.emails.pending.sendOrderCreatedAndMv("bzku0p4bcfldu4s1ksb8.json", function(err){console.log({"err->" : err});});
 // });
 
-handlers.emails.pending.getAll(function(err, emailsPending){
-      emailsPending.forEach(function(orderIdFile) {
-            console.log(orderIdFile);
-            handlers.emails.pending.sendOrderCreatedAndMv("b1zku0p4bcfldu4s1ksb8.json", function(err){
-                  if(err){
-                        // console.log('\x1b[31m%s\x1b[0m', {"err->" : JSON.stringify(err)});
-                        console.log({"err->" : JSON.stringify(err)});
-                  }
-            });
-      });
+// handlers.emails.pending.getAll(function(err, emailsPending){
+//       emailsPending.forEach(function(orderIdFile) {
+//             console.log(orderIdFile);
+//             handlers.emails.pending.sendOrderCreatedAndMv("b1zku0p4bcfldu4s1ksb8.json", function(err){
+//                   if(err){
+//                         // console.log('\x1b[31m%s\x1b[0m', {"err->" : JSON.stringify(err)});
+//                         console.log({"err->" : JSON.stringify(err)});
+//                   }
+//             });
+//       });
       
-      // handlers.emails.pending.sendOrderCreatedAndMv("bzku0p4bcfldu4s1ksb8", function(err){console.log({"err->" : err});});
-      // console.log(err);
-      // console.log(data);
-});
+//      // handlers.emails.pending.sendOrderCreatedAndMv("bzku0p4bcfldu4s1ksb8", function(err){console.log({"err->" : err});});
+//      // console.log(err);
+//      // console.log(data);
+// });
+console.log(cliTest);
+// console.log(cliTest.responders.listUsers());
+// console.log(cliTest.responders.listOrders());
+// console.log(cliTest.responders.moreOrderInfo("--dtw6ahbh00od10c9m550"));
+// console.log(cliTest.responders.moreOrderInfo("--nf9fzlkyvepixfckhta9"));
+//ini
+console.log(cliTest.responders.moreInfo("--all", "orders"));
+// console.log(cliTest.responders.moreInfo("--dtw6ahbh00od10c9m550", "orders"));
+// console.log(cliTest.responders.moreInfo("--nf9fzlkyvepixfckhta9", "orders"));
+
+// console.log(cliTest.responders.moreInfo("--5bmwp8ovgf45rx9qfyuz", "cart"));
+// console.log(cliTest.responders.moreInfo("--dtw6ahbh00od10c9m550", "payments"));
+// console.log(cliTest.responders.moreInfo("--nf9fzlkyvepixfckhta9", "payments"));
+
+// console.log(cliTest.responders.moreInfo("--lsnfcmg2yhux6vxaa7yy", "payments"));
+console.log(cliTest.responders.moreInfo("--8192 1586935905028", "payments"));
+console.log(cliTest.responders.morePaymentInfo("--wub9f03c19y9wuyffl85", "payments"));
+console.log(cliTest.responders.morePaymentInfo("--wub9f03c19y9wuyffl85", "payments"));
+// console.log(cliTest.responders.moreInfo("--dtw6ahbh00od10c9m550", "emails/sent"));
+// console.log(cliTest.responders.listPayments());
+
+
+// console.log(cliTest.responders.moreInfo("--all", "menu"));
+// console.log(cliTest.responders.moreInfo("--1", "menu"));
+// console.log(cliTest.responders.moreMenuInfo("--all")); //old
+// console.log(cliTest.responders.listOrders());
 return false;
 
 // var path = require('path');

@@ -39,7 +39,7 @@ payments.charge = function (orderId, paymentDetails, callback) {
     
     if (orderId && paymentDetails) {
 
-        _data.create(jsonDir, orderId, JSON.stringify(paymentDetails)+"\n", function (err) {
+        _data.create(jsonDir, orderId, '{"payment": { "sent":'+JSON.stringify(paymentDetails)+","+"\n", function (err) {
             if (!err){
                 var postData = qs.stringify(
                     paymentDetails
@@ -79,8 +79,8 @@ payments.charge = function (orderId, paymentDetails, callback) {
 
                         // Store the API response after sent the payment +" "+ Date.now()
                         // _data.create(jsonDir, orderId +" "+ Date.now(), value, function (err) {
-                        _data.append(jsonDir, orderId, value, function (err) {
-                            if (!err) {
+                        _data.append(jsonDir, orderId, '"received":'+JSON.stringify(value)+"}}", function (err) {
+                            if (!err) { 
                                 callback(value);
                             } else {
                                 value.errorMessage += 'Could not append the payment charge file. '+err;
