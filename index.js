@@ -101,7 +101,7 @@ handlers.hello = function(data,callback){
     if(acceptableMethods.indexOf(data.method) > -1){
         var dataPath = (data.method=='post') ? "payload" : "queryStringObject";
         var name = typeof(data[dataPath].name) == 'string' && data[dataPath].name.trim().length > 0 ? data[dataPath].name.trim() : false;
-        var data = {"greetings" : ("Hello World " + ((name) ? name : '')).trim() + '.'};
+        var data = {"pid": process.pid, "greetings" : ("Hello World " + ((name) ? name : '')).trim() + '.'};
         console.log(data);
         callback(200, data);  
     } else {
